@@ -8,7 +8,7 @@
 
 - Add income and expense entries
 - Real-time balance updates
-- View transaction history
+- View transaction aa
 - Delete transactions
 - Data persistence using `localStorage`
 - Fully responsive UI
@@ -17,10 +17,10 @@
 
 ## 🛠 Tech Stack
 
-- HTML5  
-- CSS3  
-- JavaScript (Vanilla)
-
+- React  
+- Tailwind CSS  
+- Vite  
+- JavaScript (ES6+)
 ---
 
 ## 👨‍💻 Contributor
