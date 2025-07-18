@@ -1,6 +1,6 @@
 # 💸 BudgetBuddy – Expense Tracker
 
-**BudgetBuddy** is a beginner-friendly expense tracker web app built with HTML, CSS, and vanilla JavaScript. It allows users to log their income and expenses, view their balance, and track financial entries efficiently — right from their browser.
+**BudgetBuddy** is a beginner-friendly expense tracker web app built with HTML, Tailwind CSS, and React. It allows users to log their income and expenses, view their balance, and track financial entries efficiently — right from their browser.
 
 ---
 
