@@ -7,7 +7,8 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
-
+import PrivateRoute from "./components/PrivateRoute";
+import supabase from "../supabase-client";
 
 
 const router = createBrowserRouter([
@@ -16,7 +17,11 @@ const router = createBrowserRouter([
         element: <Landing />,
     },{
         path: "/dashboard",
-        element: <Dashboard/>,
+        element: (
+            <PrivateRoute>
+                <Dashboard/>
+            </PrivateRoute>
+        ),
     },{
         path:"/login",
         element:<Login/>,
@@ -28,6 +33,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+    window.supabase = supabase;
     return (
         <>
             <RouterProvider router={router} />
