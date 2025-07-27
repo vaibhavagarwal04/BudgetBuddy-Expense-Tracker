@@ -2,13 +2,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import React, { Children } from "react";
 import ReactDOM from "react-dom/client";
-import Home from "./pages/Dashboard";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./routes/PrivateRoute";
 import supabase from "../supabase-client";
+import Income from "./pages/Income"
 
 
 const router = createBrowserRouter([
@@ -22,6 +22,9 @@ const router = createBrowserRouter([
                 <Dashboard/>
             </PrivateRoute>
         ),
+        children:[
+            {path:"income",element:<Income/>}
+        ]
     },{
         path:"/login",
         element:<Login/>,

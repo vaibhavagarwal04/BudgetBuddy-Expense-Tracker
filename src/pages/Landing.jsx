@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../components/Button";
+import Button from "../components/ui/Button";
 import landingimage from "../assets/landing-image.jpg";
 import { useNavigate } from "react-router-dom";
 
