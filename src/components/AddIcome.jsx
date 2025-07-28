@@ -1,29 +1,37 @@
 import React, { useState } from "react";
 import supabase from "../../supabase-client";
 
-function AddIncome({ onIcomAdded }) {
+function AddIncome({ onIcomAdded, userId }) {
     const [title, setTitle] = useState("");
     const [amount, setAmount] = useState("");
     const [date, setDate] = useState("");
 
     const handleAdd = async () => {
-        if (!title || !amount || !date)
-            return alert("please fill all the details");
+    if (!title || !amount || !date)
+        return alert("Please fill all the details");
 
-        const { error } = await supabase
-            .from("Income")
-            .insert([{ title, amount: parseFloat(amount), date }]);
+    if (!userId)
+        return alert("User not authenticated");
 
-        if (error) {
-            console.error("Insert error:", error);
-            alert("Failed to add income");
-        } else {
-            setTitle("");
-            setAmount("");
-            setDate("");
-            onIcomAdded();
-        }
-    };
+    const { error } = await supabase
+        .from("Income")
+        .insert([{
+            title,
+            amount: parseFloat(amount),
+            created_at: date,
+            user_id: userId
+        }]);
+
+    if (error) {
+        console.error("Insert error:", error.message);
+        alert("Failed to add income: " + error.message);
+    } else {
+        setTitle("");
+        setAmount("");
+        setDate("");
+        onIcomAdded();
+    }
+};
 
     return (
         <div className="mb-6 p-4 border rounded shadow w-80 h-80 m-auto text-center">
@@ -34,20 +42,21 @@ function AddIncome({ onIcomAdded }) {
                     placeholder="Title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full sm:w-64 p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-center"                />
+                    className="w-full p-2 border rounded-xl text-center"
+                />
                 <input
                     type="number"
                     placeholder="Amount"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full sm:w-64 p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 text-center"
+                    className="w-full p-2 border rounded-xl text-center"
                 />
                 <input
                     type="date"
+                    value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full sm:w-64 p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200"
+                    className="w-full p-2 border rounded-xl"
                 />
-
                 <button
                     onClick={handleAdd}
                     className="bg-blue-600 text-white px-4 py-2 rounded"
