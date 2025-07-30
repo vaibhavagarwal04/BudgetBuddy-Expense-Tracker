@@ -3,7 +3,6 @@ import React from "react";
 function FormLayout({ children }) {
   return (
     <div className="min-h-screen w-full bg-[#f8fafc] flex items-center justify-center relative">
-      {/* Bottom Fade Grid Background */}
       <div
         className="absolute inset-0 z-0"
         style={{

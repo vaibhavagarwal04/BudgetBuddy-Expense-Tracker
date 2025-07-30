@@ -1,11 +1,14 @@
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  theme: {
-    extend: {
-      fontFamily: {
-        noto: ['Noto Sans', "sans-serif"],
-      },
+    content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+    theme: {
+        extend: {
+            fontFamily: {
+                noto: ["Noto Sans", "sans-serif"],
+            },
+        },
     },
-  },
-  plugins: [],
+    plugins: [require("tailwind-scrollbar")],
+    variants: {
+        scrollbar: ["rounded"],
+    },
 };
