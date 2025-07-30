@@ -21,8 +21,8 @@ function Navbar() {
 
             <div className="hidden sm:flex gap-4 mr-2 font-semibold">
                 <Link to="/dashboard">Dashboard</Link>
-                <Link to="/income">Income</Link>
-                <Link to="/expense">Expense</Link>
+                <Link to="/dashboard/income">Income</Link>
+                <Link to="/dashboard/expense">Expense</Link>
                 <Link
                     to="/profile"
                     className="h-8 w-8 bg-white hover:bg-black transition duration-300 rounded-full border-2 border-black flex items-center justify-center text-black hover:text-white"
@@ -45,10 +45,10 @@ function Navbar() {
                         <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100">
                             Dashboard
                         </Link>
-                        <Link to="/income" className="block px-4 py-2 hover:bg-gray-100">
+                        <Link to="/dashboard/income" className="block px-4 py-2 hover:bg-gray-100">
                             Income
                         </Link>
-                        <Link to="/expense" className="block px-4 py-2 hover:bg-gray-100">
+                        <Link to="/dashboard/expense" className="block px-4 py-2 hover:bg-gray-100">
                             Expense
                         </Link>
                         <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">
