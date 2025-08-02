@@ -3,7 +3,7 @@ import supabase from "../../supabase-client";
 
 export const fetchIncomes = async (userId) => {
   const { data, error } = await supabase
-    .from("income")
+    .from("Income")
     .select("*")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });

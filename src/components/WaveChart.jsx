@@ -21,21 +21,26 @@ ChartJS.register(
   Legend
 );
 
-const WaveChart = ({ labels, dataPoints }) => {
+const WaveChart = ({ labels, dataPoints, type = "income" }) => {
+  const isExpense = type === "expense";
+
   const data = {
     labels,
     datasets: [
       {
-        label: "Monthly Income",
+        label: isExpense ? "Monthly Expense" : "Monthly Income",
         data: dataPoints,
         fill: true,
-        borderColor: "#10b981", 
-        backgroundColor: "rgba(16,185,129,0.2)",
+        borderColor: isExpense ? "#ef4444" : "#10b981", 
+        backgroundColor: isExpense
+          ? "rgba(239, 68, 68, 0.2)"
+          : "rgba(16, 185, 129, 0.2)",
         pointRadius: 4,
         tension: 0.5,
       },
     ],
   };
+
 
   const options = {
     responsive: true,

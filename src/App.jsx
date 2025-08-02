@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./routes/PrivateRoute";
 import supabase from "../supabase-client";
 import Income from "./pages/Income"
+import Expense from "./pages/Expense";
 
 
 const router = createBrowserRouter([
@@ -23,7 +24,8 @@ const router = createBrowserRouter([
             </PrivateRoute>
         ),
         children:[
-            {path:"income",element:<Income/>}
+            {path:"income",element:<Income/>},
+            {path:"expense",element:<Expense/>}
         ]
     },{
         path:"/login",
