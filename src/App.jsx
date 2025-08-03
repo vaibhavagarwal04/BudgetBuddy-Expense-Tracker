@@ -10,32 +10,46 @@ import PrivateRoute from "./routes/PrivateRoute";
 import supabase from "../supabase-client";
 import Income from "./pages/Income"
 import Expense from "./pages/Expense";
+import Layout from "./components/layouts/Layout";
 
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Landing />,
-    },{
-        path: "/dashboard",
-        element: (
-            <PrivateRoute>
-                <Dashboard/>
-            </PrivateRoute>
-        ),
-        children:[
-            {path:"income",element:<Income/>},
-            {path:"expense",element:<Expense/>}
-        ]
-    },{
-        path:"/login",
-        element:<Login/>,
-    }
-    ,{
-        path:"/signup",
-        element:<SignUp/>,
-    }
+  {
+    path: "/",
+    element: <Landing />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <Layout/>
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Dashboard />, 
+      },
+      {
+        path: "income",
+        element: <Income />, 
+      },
+      {
+        path: "expense",
+        element: <Expense />,
+      },
+    ],
+  },
 ]);
+
 
 function App() {
     window.supabase = supabase;

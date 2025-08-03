@@ -146,7 +146,7 @@ function Income() {
                     Your Income
                 </h2>
                 <button
-                    className="border border-black rounded-full px-6 py-2 hover:bg-black hover:text-white transition"
+                    className="border border-green-400 rounded-full px-6 py-2 hover:bg-green-400 hover:text-white transition"
                     onClick={toggle}
                 >
                     + Add Income
