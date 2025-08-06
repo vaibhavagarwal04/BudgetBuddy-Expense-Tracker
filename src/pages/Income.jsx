@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../../supabase-client";
 import AddIncome from "../components/addIcome";
-import { IndianRupee } from "lucide-react";
+import { IndianRupee, Trash2 } from "lucide-react";
 import WaveChart from "../components/WaveChart";
 import PieChart from "../components/PieChart";
 import dayjs from "dayjs";
@@ -12,6 +12,32 @@ function Income() {
     const [userId, setUserId] = useState(null);
     const [add, setAdd] = useState(false);
     const [loading, setLoading] = useState(false);
+
+   const deleteIncome = async (id) => {
+    const {
+        data: { user },
+        error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+        alert("User not authenticated");
+        return;
+    }
+
+    const { error } = await supabase
+        .from("Income")
+        .delete()
+        .match({ id: id, user_id: user.id });
+
+    if (error) {
+        console.error("Delete error:", error.message);
+        alert("Failed to delete income: " + error.message);
+    } else {
+        loadIncomes();
+    }
+};
+
+
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -91,19 +117,27 @@ function Income() {
                                 {income.amount}
                             </div>
                         </div>
-                        <p className="text-sm text-gray-500">
-                            Added on:{" "}
-                            <span className="text-gray-700 font-medium">
-                                {new Date(income.created_at).toLocaleDateString(
-                                    "en-IN",
-                                    {
+                        <div className="flex justify-between items-center">
+                            <p className="text-sm text-gray-500">
+                                Added on:{" "}
+                                <span className="text-gray-700 font-medium">
+                                    {new Date(
+                                        income.created_at
+                                    ).toLocaleDateString("en-IN", {
                                         day: "numeric",
                                         month: "short",
                                         year: "numeric",
-                                    }
-                                )}
-                            </span>
-                        </p>
+                                    })}
+                                </span>
+                            </p>
+                            <button
+                                onClick={() => deleteIncome(income.id)}
+                                className="text-red-500 hover:text-red-700"
+                                title="Delete"
+                            >
+                                <Trash2 size={20} />
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -154,8 +188,11 @@ function Income() {
             </div>
 
             <div className="mb-12">
-                <WaveChart labels={chartLabels} dataPoints={monthlyData} type="income" />
-
+                <WaveChart
+                    labels={chartLabels}
+                    dataPoints={monthlyData}
+                    type="income"
+                />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

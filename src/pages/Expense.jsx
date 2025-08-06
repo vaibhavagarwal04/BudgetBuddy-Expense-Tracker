@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../../supabase-client";
-import { IndianRupee } from "lucide-react";
+import { IndianRupee, Trash2 } from "lucide-react";
 import WaveChart from "../components/WaveChart";
 import PieChart from "../components/PieChart";
 import dayjs from "dayjs";
@@ -22,6 +22,30 @@ export default function Expense() {
         };
         fetchUser();
     }, []);
+
+      const deleteExpense = async (id) => {
+    const {
+        data: { user },
+        error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+        alert("User not authenticated");
+        return;
+    }
+
+    const { error } = await supabase
+        .from("Expense")
+        .delete()
+        .match({ id: id, user_id: user.id });
+
+    if (error) {
+        console.error("Delete error:", error.message);
+        alert("Failed to delete expense: " + error.message);
+    } else {
+        loadExpenses();
+    }
+};
 
     const loadExpenses = async () => {
         if (!userId) return;
@@ -74,16 +98,27 @@ export default function Expense() {
                                 <IndianRupee size={18} className="mr-1" />-{expense.amount}
                             </div>
                         </div>
-                        <p className="text-sm text-gray-500">
-                            Spent on: {" "}
-                            <span className="text-gray-700 font-medium">
-                                {new Date(expense.created_at).toLocaleDateString("en-IN", {
-                                    day: "numeric",
-                                    month: "short",
-                                    year: "numeric",
-                                })}
-                            </span>
-                        </p>
+                       <div className="flex justify-between items-center">
+                            <p className="text-sm text-gray-500">
+                                Added on:{" "}
+                                <span className="text-gray-700 font-medium">
+                                    {new Date(
+                                        expense.created_at
+                                    ).toLocaleDateString("en-IN", {
+                                        day: "numeric",
+                                        month: "short",
+                                        year: "numeric",
+                                    })}
+                                </span>
+                            </p>
+                            <button
+                                onClick={() => deleteExpense(expense.id)}
+                                className="text-red-500 hover:text-red-700"
+                                title="Delete"
+                            >
+                                <Trash2 size={20} />
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>

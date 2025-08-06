@@ -12,13 +12,16 @@ import {
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
-const DashboardLineChart = () => {
-  const data = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+const DashboardLineChart = ({ data }) => {
+  const labels = data.map((item) => item.date);
+  const values = data.map((item) => item.amount);
+
+  const chartData = {
+    labels,
     datasets: [
       {
         label: "Savings",
-        data: [1000, 1500, 1200, 2000, 1800, 2500, 3000],
+        data: values,
         fill: false,
         borderColor: "#4B5563",
         tension: 0.4,
@@ -44,7 +47,7 @@ const DashboardLineChart = () => {
     },
   };
 
-  return <Line data={data} options={options} />;
+  return <Line data={chartData} options={options} />;
 };
 
 export default DashboardLineChart;
