@@ -10,6 +10,10 @@ function PieChart({ data }) {
         "#F472B6", "#FCD34D", "#38BDF8", "#E879F9"
     ];
 
+    if (!data || typeof data !== "object") {
+        return <div className="text-center text-gray-500">No data to display</div>;
+    }
+
     const labels = Object.keys(data);
     const values = Object.values(data);
 

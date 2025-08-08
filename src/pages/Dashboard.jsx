@@ -1,192 +1,209 @@
-import React, { useEffect, useState } from "react";
-import DashboardPieChart from "../components/DashboardPieChart";
+import React, { useEffect, useState, useMemo } from "react";
+import { IndianRupee } from "lucide-react";
 import supabase from "../../supabase-client";
-import DashboardLineChart from "../components/DasboardLineChart";
+import WaveChart from "../components/WaveChart";
+import WeeklyTransactionChart from "../components/WeeklyTransactionChart";
+import useWeeklyTransactionChart from "../hooks/useWeeklyTransactionChart";
+import useMonthlySavings from "../hooks/useMonthlySavings";
+import dayjs from "dayjs";
+import RecentTransactions from "../components/RecentTransactions";
+import IncomeExpenseDonutChart from "../components/IncomeExpenseDonutChart";
 
 function Dashboard() {
-    const [incomeTotal, setIncomeTotal] = useState(0);
-    const [expenseTotal, setExpenseTotal] = useState(0);
-    const [savingsData, setSavingsData] = useState([]);
+    const [userId, setUserId] = useState(null);
+    const [income, setIncome] = useState([]);
+    const [expense, setExpense] = useState([]);
+    const [filter, setFilter] = useState("month");
+
+    const weeklyChartData = useWeeklyTransactionChart(userId);
+    const { labels: monthlyLabels, monthlySavings } = useMonthlySavings(userId);
 
     useEffect(() => {
+        const getUser = async () => {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            setUserId(user?.id || null);
+        };
+        getUser();
+    }, []);
+
+    useEffect(() => {
+        if (!userId) return;
+
         const fetchData = async () => {
-            const { data: incomeData } = await supabase
-                .from("Income")
-                .select("amount, created_at");
+            const now = dayjs();
+            let fromDate = null;
+            if (filter === "month") fromDate = now.startOf("month");
+            else if (filter === "3months")
+                fromDate = now.subtract(3, "month").startOf("month");
 
-            const { data: expenseData } = await supabase
-                .from("Expense")
-                .select("amount, created_at");
+            const applyDateFilter = (query) =>
+                filter === "all"
+                    ? query
+                    : query.gte("created_at", fromDate.toISOString());
 
-            let incomeTotal = 0;
-            let expenseTotal = 0;
-            const savingsMap = {};
-
-            incomeData?.forEach(({ amount, created_at }) => {
-                const date = new Date(created_at);
-                const month = date.toLocaleString("default", {
-                    month: "short",
-                    year: "numeric",
-                }); 
-                incomeTotal += amount;
-                savingsMap[month] = (savingsMap[month] || 0) + amount;
-            });
-
-            expenseData?.forEach(({ amount, created_at }) => {
-                const date = new Date(created_at);
-                const month = date.toLocaleString("default", {
-                    month: "short",
-                    year: "numeric",
-                });
-                expenseTotal += amount;
-                savingsMap[month] = (savingsMap[month] || 0) - amount;
-            });
-
-            setIncomeTotal(incomeTotal);
-            setExpenseTotal(expenseTotal);
-
-            const sortedMonths = Object.keys(savingsMap).sort(
-                (a, b) => new Date(`1 ${a}`) - new Date(`1 ${b}`)
+            const incomeQuery = applyDateFilter(
+                supabase.from("Income").select("*").eq("user_id", userId)
+            );
+            const expenseQuery = applyDateFilter(
+                supabase.from("Expense").select("*").eq("user_id", userId)
             );
 
-            const savings = sortedMonths.map((month) => ({
-                date: month,
-                amount: savingsMap[month],
-            }));
+            const [incomeResult, expenseResult] = await Promise.all([
+                incomeQuery,
+                expenseQuery,
+            ]);
 
-            setSavingsData(savings);
+            setIncome(incomeResult.data || []);
+            setExpense(expenseResult.data || []);
         };
 
         fetchData();
-    }, []);
+    }, [userId, filter]);
 
-    const currentAmount = incomeTotal - expenseTotal;
+    const { totalIncome, totalExpense, savings, recentTransactions } =
+        useMemo(() => {
+            const totalIncomeCalc = income.reduce(
+                (acc, curr) => acc + curr.amount,
+                0
+            );
+            const totalExpenseCalc = expense.reduce(
+                (acc, curr) => acc + curr.amount,
+                0
+            );
+            const savingsCalc = totalIncomeCalc - totalExpenseCalc;
 
-    const formatCurrency = (amount) =>
-        amount.toLocaleString("en-IN", { style: "currency", currency: "INR" });
+            const allTransactions = [
+                ...income.map((i) => ({ ...i, type: "income" })),
+                ...expense.map((e) => ({ ...e, type: "expense" })),
+            ];
+
+            const sortedRecent = allTransactions
+                .sort(
+                    (a, b) =>
+                        new Date(b.date || b.created_at) -
+                        new Date(a.date || a.created_at)
+                )
+                .slice(0, 10);
+
+            return {
+                totalIncome: totalIncomeCalc,
+                totalExpense: totalExpenseCalc,
+                savings: savingsCalc,
+                recentTransactions: sortedRecent,
+            };
+        }, [income, expense]);
+
+    const statCards = [
+        {
+            title: "Total Income",
+            amount: totalIncome,
+
+            bg: "bg-gradient-to-br from-emerald-900 via-emerald-700 to-emerald-500 backdrop-blur-md bg-opacity-90 shadow-lg shadow-emerald-900/40 rounded-2xl",
+            accent: "border-2 border-yellow-300/80",
+        },
+        {
+            title: "Total Expense",
+            amount: totalExpense,
+            bg: "bg-gradient-to-br from-rose-800 via-rose-600 to-rose-500",
+            accent: "border-yellow-400",
+        },
+        {
+            title: "Total Savings",
+            amount: savings,
+            bg: "bg-gradient-to-br from-indigo-800 via-indigo-600 to-indigo-500",
+            accent: "border-yellow-400",
+        },
+    ];
 
     return (
-        <div className="bg-[#fefcff] px-6 py-2 flex flex-col md:flex-row gap-5">
-            <div className="w-full md:w-1/4 bg-white rounded-2xl p-6 shadow-md flex flex-col gap-6 h-1/2">
-                <div>
-                    <h2 className="text-sm text-gray-500">Current Amount</h2>
-                    <p className="text-3xl font-bold text-gray-900">
-                        {formatCurrency(currentAmount)}
-                    </p>
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <div className="w-24 h-24">
-                        <DashboardPieChart
-                            label1="Deposit"
-                            value1={incomeTotal}
-                            label2="Remaining"
-                            value2={expenseTotal}
-                        />
+        <div className="p-10 space-y-12 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                {statCards.map(({ title, amount, bg, accent }) => (
+                    <div
+                        key={title}
+                        className={`${bg} relative overflow-hidden rounded-3xl shadow-2xl border ${accent} p-7 transition-transform transform hover:scale-105`}
+                        style={{
+                           
+                            backgroundBlendMode: "overlay",
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/20"></div>
+                        <div className="relative z-10">
+                            <p className="text-lg font-serif tracking-wide text-yellow-300 drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]">
+                                {title}
+                            </p>
+                            <p className="text-4xl font-bold flex items-center gap-1 mt-2 text-yellow-200 drop-shadow-[0_0_8px_rgba(0,0,0,0.8)]">
+                                <IndianRupee size={26} />{" "}
+                                {amount.toLocaleString()}
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <p className="text-lg font-semibold text-green-600">
-                            {formatCurrency(incomeTotal)}
-                        </p>
-                        <p className="text-sm text-gray-600">Deposit</p>
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <div className="w-24 h-24">
-                        <DashboardPieChart
-                            label1="Withdraw"
-                            value1={expenseTotal}
-                            label2="Remaining"
-                            value2={currentAmount}
-                        />
-                    </div>
-                    <div>
-                        <p className="text-lg font-semibold text-red-600">
-                            {formatCurrency(expenseTotal)}
-                        </p>
-                        <p className="text-sm text-gray-600">Withdraw</p>
-                    </div>
-                </div>
+                ))}
             </div>
 
-            <div className="w-full md:w-2/3">
-                <div className="mb-6">
-                    <h1 className="text-xl font-bold text-gray-800">
-                        Financial
-                    </h1>
-                    <h2 className="text-2xl font-extrabold text-gray-900">
-                        Dashboard
+            <div className="flex gap-4 justify-center">
+                {["month", "3months", "all"].map((val) => (
+                    <button
+                        key={val}
+                        onClick={() => setFilter(val)}
+                        className={`px-6 py-2.5 rounded-full text-sm font-medium shadow-md transition-all ${
+                            filter === val
+                                ? "bg-indigo-600 text-white shadow-lg"
+                                : "bg-white border hover:bg-gray-100"
+                        }`}
+                    >
+                        {val === "month"
+                            ? "This Month"
+                            : val === "3months"
+                            ? "Last 3 Months"
+                            : "All Time"}
+                    </button>
+                ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="bg-white p-7 rounded-3xl shadow-lg border border-gray-100">
+                    <h2 className="text-2xl font-semibold mb-5">
+                        📈 Monthly Savings Overview
                     </h2>
+                    <WaveChart
+                        labels={monthlyLabels}
+                        dataPoints={monthlySavings}
+                        type="savings"
+                    />
                 </div>
 
-                <div className="bg-white rounded-xl shadow p-6">
-                    <DashboardLineChart data={savingsData} />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    {/* Recent Transactions */}
-                    <div className="bg-white rounded-xl shadow p-4">
-                        <h3 className="text-lg font-semibold mb-4">
-                            Last Transactions
-                        </h3>
-                        <ul className="divide-y divide-gray-200">
-                            {[...incomeData, ...expenseData]
-                                .sort(
-                                    (a, b) =>
-                                        new Date(b.created_at) -
-                                        new Date(a.created_at)
-                                )
-                                .slice(0, 5)
-                                .map((txn, idx) => (
-                                    <li
-                                        key={idx}
-                                        className="py-2 flex justify-between items-center"
-                                    >
-                                        <span className="text-gray-700">
-                                            {txn.title ||
-                                                txn.category ||
-                                                "Transaction"}
-                                        </span>
-                                        <span
-                                            className={`font-medium ${
-                                                txn.amount > 0
-                                                    ? "text-green-600"
-                                                    : "text-red-600"
-                                            }`}
-                                        >
-                                            {txn.amount > 0 ? "+" : "-"}₹
-                                            {Math.abs(txn.amount)}
-                                        </span>
-                                    </li>
-                                ))}
-                        </ul>
-                    </div>
+                <RecentTransactions transactions={recentTransactions} />
+            </div>
 
-                    {/* Expense Breakdown by Category */}
-                    <div className="bg-white rounded-xl shadow p-4">
-                        <h3 className="text-lg font-semibold mb-4">
-                            Expense by Category
-                        </h3>
-                        <ul className="divide-y divide-gray-200">
-                            {Object.entries(
-                                expenseData?.reduce((acc, curr) => {
-                                    const cat = curr.category || "Others";
-                                    acc[cat] = (acc[cat] || 0) + curr.amount;
-                                    return acc;
-                                }, {})
-                            ).map(([cat, amt], idx) => (
-                                <li
-                                    key={idx}
-                                    className="py-2 flex justify-between items-center"
-                                >
-                                    <span className="text-gray-700">{cat}</span>
-                                    <span className="text-red-600 font-semibold">
-                                        ₹{amt}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="bg-white p-7 rounded-3xl shadow-lg border border-gray-100">
+                    <h2 className="text-2xl font-bold mb-6">
+                        💰 Income vs Expense
+                    </h2>
+                    <IncomeExpenseDonutChart
+                        income={totalIncome}
+                        expense={totalExpense}
+                    />
+                </div>
+
+                <div className="bg-white p-7 rounded-3xl shadow-lg border border-gray-100">
+                    <h2 className="text-2xl font-bold mb-6">
+                        📊 Weekly Transactions
+                    </h2>
+                    {weeklyChartData?.datasets?.length > 0 ? (
+                        <div className="h-80">
+                            <WeeklyTransactionChart
+                                chartData={weeklyChartData}
+                            />
+                        </div>
+                    ) : (
+                        <div className="flex justify-center items-center h-48 text-gray-400 animate-pulse">
+                            Loading weekly data...
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

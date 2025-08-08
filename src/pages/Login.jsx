@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormLayout from "../components/FormLayOut";
 import supabase from "../../supabase-client";
+import { Eye, EyeOff } from "lucide-react";
+import { motion } from "framer-motion";
+import loginIllustration from "../assets/Mobile login-cuate.svg";
 
 function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,71 +20,100 @@ function Login() {
             password,
         });
 
-        if(error) setErrorMsg(error.message);
+        if (error) setErrorMsg(error.message);
         else navigate("/dashboard");
     };
 
-
     return (
         <FormLayout>
-            <form
-                className="max-w-md mx-auto p-6 border-1 rounded-2xl shadow-md h-80 w-70"
-                onSubmit={handleSubmit}
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="flex flex-col-reverse md:flex-row items-center justify-center gap-8 bg-white p-8 rounded-2xl shadow-xl w-full max-w-4xl mx-auto"
             >
-                <h2 className="text-2xl font-bold text-center mb-6 text-black ">
-                    Login
-                </h2>
-
-                {errorMsg && (
-                    <p className="text-red-500 text-sm mb-4 text-center">{errorMsg}</p>
-                )}
-
-                <div className="relative z-0 w-full mb-5 group">
-                    <input
-                        type="email"
-                        name="floating_email"
-                        id="floating_email"
-                        className="block py-3.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-black peer"
-                        placeholder=" "
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <label
-                        htmlFor="floating_email"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-8"
-
-                    >
-                        Email address
-                    </label>
-                </div>
-
-                <div className="relative z-0 w-full mb-5 group">
-                    <input
-                        type="password"
-                        name="floating_password"
-                        id="floating_password"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-black peer "
-                        placeholder=" "
-                        required
-                        value={password}
-                        onChange={(e)=>setPassword(e.target.value)}
-                    />
-                    <label
-                        htmlFor="floating_password"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 "
-                    >
-                        Password
-                    </label>
-                </div>
-
-                <button
-                    type="submit"
-                    className="w-full text-white bg-black hover:bg-gray-900 focus:ring-2  font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all mt-4"
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-full md:w-1/2"
                 >
-                    Submit
-                </button>
-            </form>
+                    <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
+                        Welcome Back 👋
+                    </h2>
+
+                    {errorMsg && (
+                        <p className="text-red-500 text-sm text-center mb-4">
+                            {errorMsg}
+                        </p>
+                    )}
+
+                    <div className="mb-6">
+                        <label
+                            htmlFor="email"
+                            className="block text-gray-600 text-sm font-medium mb-2"
+                        >
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                            placeholder="you@example.com"
+                        />
+                    </div>
+
+                    <div className="mb-2 relative">
+                        <label
+                            htmlFor="password"
+                            className="block text-gray-600 text-sm font-medium mb-2"
+                        >
+                            Password
+                        </label>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            id="password"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                            placeholder="••••••••"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-4 top-10 text-gray-600"
+                        >
+                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                    </div>
+
+                    <div className="text-right mb-6">
+                        <a
+                            href="#"
+                            className="text-sm text-blue-600 hover:underline"
+                        >
+                            Forgot Password?
+                        </a>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-900 transition duration-200"
+                    >
+                        Log In
+                    </button>
+                </form>
+
+                <div className="w-full md:w-1/2">
+                    <img
+                        src={loginIllustration}
+                        alt="Login Illustration"
+                        className="w-full max-w-md mx-auto"
+                    />
+                </div>
+            </motion.div>
         </FormLayout>
     );
 }

@@ -5,9 +5,10 @@ import {
   LinearScale,
   PointElement,
   LineElement,
-  Filler,
+  Title,
   Tooltip,
   Legend,
+  Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
@@ -16,59 +17,87 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  Filler,
+  Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
 
-const WaveChart = ({ labels, dataPoints, type = "income" }) => {
-  const isExpense = type === "expense";
+function WaveChart({ labels, dataPoints, type = "savings" }) {
+  const primaryColor = type === "savings" ? "#2563EB" : "#10B981";
+  const backgroundFill =
+    type === "savings" ? "rgba(37, 99, 235, 0.08)" : "rgba(16, 185, 129, 0.08)";
 
   const data = {
     labels,
     datasets: [
       {
-        label: isExpense ? "Monthly Expense" : "Monthly Income",
+        label: type === "savings" ? "Monthly Savings" : "Line Chart",
         data: dataPoints,
         fill: true,
-        borderColor: isExpense ? "#ef4444" : "#10b981", 
-        backgroundColor: isExpense
-          ? "rgba(239, 68, 68, 0.2)"
-          : "rgba(16, 185, 129, 0.2)",
-        pointRadius: 4,
-        tension: 0.5,
+        borderColor: primaryColor,
+        backgroundColor: backgroundFill,
+        tension: 0.4,
+        pointBackgroundColor: primaryColor,
+        pointBorderColor: "#fff",
+        pointRadius: 3,
+        pointHoverRadius: 5,
       },
     ],
   };
-
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false,
+        display: true,
+        position: "top",
+        labels: {
+          color: "#374151",
+          font: {
+            size: 12,
+            weight: "500",
+          },
+        },
       },
       tooltip: {
-        mode: "index",
-        intersect: false,
+        backgroundColor: "#111827",
+        titleColor: "#E5E7EB",
+        bodyColor: "#F3F4F6",
+        callbacks: {
+          label: (context) => `₹${context.raw.toLocaleString()}`,
+        },
       },
     },
     scales: {
+      x: {
+        ticks: {
+          color: "#6B7280",
+          font: { size: 11 },
+        },
+        grid: { display: false },
+      },
       y: {
         beginAtZero: true,
         ticks: {
+          color: "#6B7280",
+          font: { size: 11 },
           callback: (value) => `₹${value}`,
+        },
+        grid: {
+          color: "#E5E7EB",
+          drawBorder: false,
         },
       },
     },
   };
 
   return (
-    <div className="w-full h-[300px] bg-white rounded-2xl shadow p-4">
-      <Line data={data} options={options} />
+    <div style={{ height: "220px", width: "100%" }}>
+      <Line options={options} data={data} />
     </div>
   );
-};
+}
 
 export default WaveChart;
