@@ -99,21 +99,20 @@ function Dashboard() {
         {
             title: "Total Income",
             amount: totalIncome,
-
-            bg: "bg-gradient-to-br from-emerald-900 via-emerald-700 to-emerald-500 backdrop-blur-md bg-opacity-90 shadow-lg shadow-emerald-900/40 rounded-2xl",
-            accent: "border-2 border-yellow-300/80",
+            bg: "bg-gradient-to-br from-teal-700 via-teal-500 to-teal-400 backdrop-blur-xl bg-opacity-80 shadow-lg shadow-teal-700/50 rounded-2xl border border-teal-300/60 hover:scale-[1.03] transition-transform duration-300 ease-out hover:shadow-teal-600/70",
+            accent: "border-teal-300/80",
         },
         {
             title: "Total Expense",
             amount: totalExpense,
-            bg: "bg-gradient-to-br from-rose-800 via-rose-600 to-rose-500",
-            accent: "border-yellow-400",
+            bg: "bg-gradient-to-br from-orange-700 via-orange-500 to-orange-400 backdrop-blur-xl bg-opacity-80 shadow-lg shadow-orange-700/50 rounded-2xl border border-orange-300/60 hover:scale-[1.03] transition-transform duration-300 ease-out hover:shadow-orange-600/70",
+            accent: "border-orange-300/80",
         },
         {
             title: "Total Savings",
             amount: savings,
-            bg: "bg-gradient-to-br from-indigo-800 via-indigo-600 to-indigo-500",
-            accent: "border-yellow-400",
+            bg: "bg-gradient-to-br from-cyan-700 via-cyan-500 to-cyan-400 backdrop-blur-xl bg-opacity-80 shadow-lg shadow-cyan-700/50 rounded-2xl border border-cyan-300/60 hover:scale-[1.03] transition-transform duration-300 ease-out hover:shadow-cyan-600/70",
+            accent: "border-cyan-300/80",
         },
     ];
 
@@ -125,7 +124,6 @@ function Dashboard() {
                         key={title}
                         className={`${bg} relative overflow-hidden rounded-3xl shadow-2xl border ${accent} p-7 transition-transform transform hover:scale-105`}
                         style={{
-                           
                             backgroundBlendMode: "overlay",
                         }}
                     >

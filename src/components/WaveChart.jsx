@@ -11,6 +11,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import Expense from "../pages/Expense";
 
 ChartJS.register(
   CategoryScale,
@@ -24,9 +25,23 @@ ChartJS.register(
 );
 
 function WaveChart({ labels, dataPoints, type = "savings" }) {
-  const primaryColor = type === "savings" ? "#2563EB" : "#10B981";
+  const primaryColor =
+    type === "savings"
+      ? "#2563EB"
+      : type === "expense"
+      ? "#EF4444"
+      : type === "income"
+      ? "#10B981"
+      : "#2563EB";
+
   const backgroundFill =
-    type === "savings" ? "rgba(37, 99, 235, 0.08)" : "rgba(16, 185, 129, 0.08)";
+    type === "savings"
+      ? "rgba(37, 99, 235, 0.08)"
+      : type === "expense"
+      ? "rgba(239, 68, 68, 0.1)"
+      : type === "income"
+      ? "rgba(16, 185, 129, 0.1)"
+      : "rgba(37, 99, 235, 0.08)";
 
   const data = {
     labels,
@@ -99,5 +114,6 @@ function WaveChart({ labels, dataPoints, type = "savings" }) {
     </div>
   );
 }
+
 
 export default WaveChart;

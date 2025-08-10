@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import supabase from "../../supabase-client";
 
-function AddExpense({ onExpenseAdded, userId }) {
+function AddExpense({ onExpenseAdded, userId, onClose }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
@@ -25,12 +25,21 @@ function AddExpense({ onExpenseAdded, userId }) {
       setTitle("");
       setAmount("");
       setDate("");
-      onExpenseAdded(); 
+      onExpenseAdded();
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-2xl p-6 shadow-2xl">
+  <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+    <div className="bg-white bg-opacity-90 rounded-2xl p-8 max-w-md w-full shadow-2xl relative backdrop-filter backdrop-blur-sm">
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-5 text-gray-600 hover:text-gray-900 text-3xl font-bold transition"
+        aria-label="Close"
+      >
+        &times;
+      </button>
+
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
         Add New Expense
       </h2>
@@ -65,7 +74,9 @@ function AddExpense({ onExpenseAdded, userId }) {
         </button>
       </div>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default AddExpense;

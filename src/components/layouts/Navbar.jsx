@@ -11,7 +11,7 @@ function Navbar() {
     return (
         <nav className="backdrop-blur-md bg-white/30 border border-white/20 shadow-lg px-6 py-4 rounded-2xl sticky top-0 z-50 flex justify-between items-center max-w-7xl mx-auto">
             <div className="text-2xl font-extrabold tracking-wide text-gray-800">
-                <Link to="/" className="hover:opacity-80 transition duration-300">
+                <Link to="#" className="hover:opacity-80 transition duration-300">
                     ~BudgetBuddy
                 </Link>
             </div>
@@ -28,7 +28,7 @@ function Navbar() {
                     </Link>
                 ))}
                 <Link
-                    to="/profile"
+                    to="/dashboard/profile"
                     className="h-10 w-10 bg-gray-800 text-white hover:bg-black transition duration-300 rounded-full border border-gray-700 flex items-center justify-center font-bold"
                     title="Profile"
                 >
@@ -49,7 +49,7 @@ function Navbar() {
                         {["Dashboard", "Income", "Expense", "Profile"].map((item) => (
                             <Link
                                 key={item}
-                                to={`/${item === "Profile" ? "profile" : "dashboard" + (item !== "Dashboard" ? "/" + item.toLowerCase() : "")}`}
+                                to={`/${item === "Profile" ? "dashboard/profile" : "dashboard" + (item !== "Dashboard" ? "/" + item.toLowerCase() : "")}`}
                                 className="block px-4 py-2 hover:bg-gray-100 transition duration-200"
                             >
                                 {item}

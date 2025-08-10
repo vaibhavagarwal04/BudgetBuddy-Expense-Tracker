@@ -11,6 +11,7 @@ import supabase from "../supabase-client";
 import Income from "./pages/Income"
 import Expense from "./pages/Expense";
 import Layout from "./components/layouts/Layout";
+import Profile from "./pages/Profile";
 
 
 const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "expense",
         element: <Expense />,
+      },
+      {
+        path: "profile",
+        element: <Profile/>,
       },
     ],
   },
