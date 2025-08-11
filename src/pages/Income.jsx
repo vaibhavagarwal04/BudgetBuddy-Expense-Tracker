@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../../supabase-client";
-import AddIncome from "../components/addIcome";
+import AddIncome from "../components/AddIcome";
 import {
   IndianRupee,
   Trash2,
