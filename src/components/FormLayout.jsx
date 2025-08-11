@@ -1,6 +1,6 @@
 import React from "react";
 
-function FormLayOut({ children }) {
+function FormLayout({ children }) {
   return (
     <div className="min-h-screen w-full bg-[#f8fafc] flex items-center justify-center relative">
       <div
@@ -22,4 +22,4 @@ function FormLayOut({ children }) {
   );
 }
 
-export default FormLayOut;
+export default FormLayout;

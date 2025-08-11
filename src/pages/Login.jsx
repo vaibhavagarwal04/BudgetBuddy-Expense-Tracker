@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FormLayout from "../components/FormLayOut";
+import FormLayout from "../components/FormLayout";
 import supabase from "../../supabase-client";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
