@@ -30,11 +30,11 @@ function Login() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="flex flex-col-reverse md:flex-row items-center justify-center gap-8 bg-white p-8 rounded-2xl shadow-xl w-full max-w-4xl mx-auto"
+                className="flex flex-col-reverse md:flex-row items-center justify-center gap-8 bg-white p-8 rounded-2xl shadow-xl w-full max-w-4xl mx-auto" 
+                onClick={() => navigate("/")}
             >
                 <form
-                    onSubmit={handleSubmit}
-                    className="w-full md:w-1/2"
+                    onSubmit={handleSubmit}onClick={(e) => e.stopPropagation()} className="w-full md:w-1/2"
                 >
                     <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
                         Welcome Back 👋

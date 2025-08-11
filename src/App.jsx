@@ -12,6 +12,7 @@ import Income from "./pages/Income"
 import Expense from "./pages/Expense";
 import Layout from "./components/layouts/Layout";
 import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 
 
 const router = createBrowserRouter([
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
         element: <Profile/>,
       },
     ],
+  },
+  {
+    path:"*",
+    element:<NotFound/>
   },
 ]);
 

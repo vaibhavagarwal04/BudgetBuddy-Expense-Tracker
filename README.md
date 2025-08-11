@@ -8,9 +8,9 @@
 
 - Add income and expense entries
 - Real-time balance updates
-- View transaction aa
+- View transaction history
 - Delete transactions
-- Data persistence using `localStorage`
+- Data persistence using supabase
 - Fully responsive UI
 
 ---
@@ -21,6 +21,7 @@
 - Tailwind CSS  
 - Vite  
 - JavaScript (ES6+)
+- supabase
 ---
 
 ## 👨‍💻 Contributor
