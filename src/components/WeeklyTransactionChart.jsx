@@ -28,6 +28,7 @@ function WeeklyTransactionChart({ chartData }) {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
@@ -69,7 +70,11 @@ function WeeklyTransactionChart({ chartData }) {
     },
   };
 
-  return <Bar data={enhancedData} options={options} />;
+  return (
+    <div style={{ width: "100%", height: "300px" }}>
+      <Bar data={enhancedData} options={options} />
+    </div>
+  );
 }
 
 export default WeeklyTransactionChart;

@@ -187,12 +187,12 @@ function Dashboard() {
                     />
                 </div>
 
-                <div className="bg-white p-7 rounded-3xl shadow-lg border border-gray-100">
+                <div className="bg-white p-7 rounded-3xl shadow-lg border border-gray-100 ">
                     <h2 className="text-2xl font-bold mb-6">
                         📊 Weekly Transactions
                     </h2>
                     {weeklyChartData?.datasets?.length > 0 ? (
-                        <div className="h-80">
+                        <div className="h-70 ">
                             <WeeklyTransactionChart
                                 chartData={weeklyChartData}
                             />

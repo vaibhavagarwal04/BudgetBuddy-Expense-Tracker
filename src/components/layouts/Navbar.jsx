@@ -45,7 +45,7 @@ function Navbar() {
                 </button>
 
                 {dropDown && (
-                    <div className="absolute right-0 mt-3 w-44 bg-white/90 backdrop-blur-md text-gray-800 border border-gray-200 rounded-lg shadow-xl z-50 overflow-hidden transition-all duration-300 ease-in-out">
+                    <div className="absolute right-0 mt-3 w-44 bg-white/90 backdrop-blur-md text-gray-800 border border-gray-200 rounded-lg shadow-xl z-50 overflow-hidden transition-all duration-300 ease-in-out" onClick={handleDropDown}>
                         {["Dashboard", "Income", "Expense", "Profile"].map((item) => (
                             <Link
                                 key={item}
