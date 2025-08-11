@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import supabase from "../../supabase-client";
 import { IndianRupee, Trash2 } from "lucide-react";
 import WaveChart from "../components/WaveChart";
@@ -12,6 +12,9 @@ export default function Expense() {
     const [userId, setUserId] = useState(null);
     const [add, setAdd] = useState(false);
     const [loading, setLoading] = useState(false);
+    const todayRef=useRef(null);
+    const monthRef=useRef(null);
+    const yearRef=useRef(null);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -98,8 +101,15 @@ export default function Expense() {
         "This Year": yearExpenses.reduce((acc, e) => acc + e.amount, 0),
     };
 
-    const StatCard = ({ label, value, icon: Icon, gradient }) => (
+    const StatCard = ({ label, value, icon: Icon, gradient , targetRef }) =>{
+        const handleClick=()=>{
+            if (targetRef?.current) {
+                targetRef.current.scrollIntoView({ behavior: "smooth" });
+            }
+        };
+     return  (
         <div
+            onClick={handleClick}
             className={`flex items-center gap-4 p-5 rounded-xl shadow-lg text-white ${gradient}`}
         >
             <div className="p-3 bg-white/20 rounded-full">
@@ -113,6 +123,7 @@ export default function Expense() {
             </div>
         </div>
     );
+};
 
     const renderExpenses = (list) =>
         list.length === 0 ? (
@@ -173,18 +184,21 @@ export default function Expense() {
                     value={expenseOverviewData.Today}
                     icon={Trash2}
                     gradient="bg-gradient-to-r from-blue-500 to-blue-700"
+                    targetRef={todayRef}
                 />
                 <StatCard
                     label="This Month"
                     value={expenseOverviewData["This Month"]}
                     icon={Trash2}
                     gradient="bg-gradient-to-r from-cyan-500 to-cyan-700"
+                    targetRef={monthRef}
                 />
                 <StatCard
                     label="This Year"
                     value={expenseOverviewData["This Year"]}
                     icon={Trash2}
                     gradient="bg-gradient-to-r from-teal-600 to-teal-800"
+                    targetRef={yearRef}
                 />
             </div>
 
@@ -205,7 +219,7 @@ export default function Expense() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="h-96 bg-white/80 backdrop-blur-md rounded-xl shadow-md flex flex-col">
+                <div ref={todayRef} className="h-96 bg-white/80 backdrop-blur-md rounded-xl shadow-md flex flex-col">
                     <div className="bg-blue-600 text-white p-4 rounded-t-xl">
                         <h3 className="text-lg font-semibold">
                             Today's Expenses
@@ -217,7 +231,7 @@ export default function Expense() {
                 </div>
 
                 <div className="h-96 bg-white/80 backdrop-blur-md rounded-xl shadow-md flex flex-col">
-                    <div className="bg-cyan-600 text-white p-4 rounded-t-xl">
+                    <div ref={monthRef} className="bg-cyan-600 text-white p-4 rounded-t-xl">
                         <h3 className="text-lg font-semibold">This Month</h3>
                     </div>
                     <div className="p-4 flex-1 min-h-0 overflow-y-auto custom-scrollbar">
@@ -226,7 +240,7 @@ export default function Expense() {
                 </div>
 
                 <div className="h-96 bg-white/80 backdrop-blur-md rounded-xl shadow-md flex flex-col">
-                    <div className="bg-teal-700 text-white p-4 rounded-t-xl">
+                    <div ref={yearRef} className="bg-teal-700 text-white p-4 rounded-t-xl">
                         <h3 className="text-lg font-semibold">This Year</h3>
                     </div>
                     <div className="p-4 flex-1 min-h-0 overflow-y-auto custom-scrollbar">

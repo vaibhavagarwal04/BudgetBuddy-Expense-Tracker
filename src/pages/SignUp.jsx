@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import FormLayout from "../components/FormLayout";
-import illustration from "../assets/Sign up-rafiki.svg";
+import illustration from "../assets/Sign-up-rafiki.svg";
 import supabase from "../../supabase-client";
 
 function SignUp() {
