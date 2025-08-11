@@ -28,3 +28,5 @@
 
 - [vaibhavagarwal04](https://github.com/vaibhavagarwal04)
 
+##
+- Here's the deplyoyed link- https://thebudgetbuddyy.netlify.app
