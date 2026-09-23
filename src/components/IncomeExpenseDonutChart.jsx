@@ -24,6 +24,10 @@ export default function IncomeExpenseDonutChart({ income, expense }) {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 300,
+    },
     plugins: {
       legend: {
         position: "bottom"
@@ -38,7 +42,7 @@ export default function IncomeExpenseDonutChart({ income, expense }) {
   };
 
   return (
-    <div style={{ width: "100%", maxWidth: 300, margin: "0 auto" }}>
+    <div className="mx-auto h-72 w-full max-w-sm">
       <Doughnut data={data} options={options} />
     </div>
   );

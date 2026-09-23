@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import supabase from "../../supabase-client";
 import manAvatar from "../assets/manavatar.png";
 import avatarGirl from "../assets/avatargirl.png";
@@ -15,13 +16,13 @@ import {
 } from "react-icons/fa";
 
 export default function Profile() {
+    const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
     const [income, setIncome] = useState([]);
     const [expense, setExpense] = useState([]);
     const [loading, setLoading] = useState(true);
     const [lastLogin, setLastLogin] = useState(null);
     const [userId, setUserId] = useState(null);
-    const [authUser, setAuthUser] = useState(null);
     const [gender, setGender] = useState("");
 
     useEffect(() => {
@@ -30,7 +31,6 @@ export default function Profile() {
             const {
                 data: { user },
             } = await supabase.auth.getUser();
-            setAuthUser(user);
             if (!user) {
                 setLoading(false);
                 return;
@@ -255,9 +255,7 @@ export default function Profile() {
                         <div className="flex flex-col sm:flex-row gap-3">
                             <button
                                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white py-2.5 shadow-sm transition"
-                                onClick={() =>
-                                    (window.location.href = "/edit-profile")
-                                }
+                                onClick={() => navigate("/dashboard/edit-profile")}
                             >
                                 <FaEdit /> Edit Profile
                             </button>

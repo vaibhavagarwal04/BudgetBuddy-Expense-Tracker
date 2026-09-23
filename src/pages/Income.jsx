@@ -100,7 +100,7 @@ function Income() {
         "This Year": yearIncomes.reduce((acc, i) => acc + i.amount, 0),
     };
 
-    const StatCard = ({ label, value, icon: Icon, gradient, targetRef }) => {
+    const StatCard = ({ label, value, icon, gradient, targetRef }) => {
         const handleClick = () => {
             if (targetRef?.current) {
                 targetRef.current.scrollIntoView({ behavior: "smooth" });
@@ -113,7 +113,7 @@ function Income() {
                 className={`flex items-center gap-4 p-5 rounded-xl shadow-lg text-white ${gradient} cursor-pointer transition-transform hover:scale-105`}
             >
                 <div className="p-3 bg-white/20 rounded-full">
-                    <Icon size={28} />
+                    {React.createElement(icon, { size: 28 })}
                 </div>
                 <div>
                     <p className="text-sm opacity-80">{label}</p>
@@ -255,15 +255,22 @@ function Income() {
             )}
 
             {add && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-                    <div className="bg-white p-6 rounded-2xl shadow-xl max-w-md w-full relative">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 py-6 backdrop-blur-md">
+                    <div className="relative max-h-full w-full max-w-lg overflow-y-auto rounded-2xl shadow-2xl">
                         <button
                             onClick={toggle}
-                            className="absolute top-2 right-3 text-gray-500 hover:text-black text-xl font-bold"
+                            aria-label="Close add income form"
+                            className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-2xl font-light text-white transition hover:bg-white/35"
                         >
                             &times;
                         </button>
-                        <AddIncome userId={userId} onIcomAdded={loadIncomes} />
+                        <AddIncome
+                            userId={userId}
+                            onIncomeAdded={() => {
+                                loadIncomes();
+                                setAdd(false);
+                            }}
+                        />
                     </div>
                 </div>
             )}

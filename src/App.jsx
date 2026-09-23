@@ -12,6 +12,7 @@ import Income from "./pages/Income"
 import Expense from "./pages/Expense";
 import Layout from "./components/layouts/Layout";
 import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 import NotFound from "./pages/NotFound";
 
 
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile/>,
+      },
+      {
+        path: "edit-profile",
+        element: <EditProfile/>,
       },
     ],
   },
